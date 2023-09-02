@@ -30,17 +30,18 @@ class EmployeeController extends Controller
         }
     }
 
-    public function insert(Request $request)
+    public function insertDataMethod(Request $request)
     {
+        dd($request);
         $validation = $request->validate([
             'name' => 'required',
             'email' => 'required|email',
             'role' => 'required',
             'age' => 'required|integer',
             'city' => 'required',
-            'image_name' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', 
+            'image_name' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-    
+
         if ($validation) {
             try {
                 // Handle image upload
@@ -52,7 +53,7 @@ class EmployeeController extends Controller
                 } else {
                     $imageName = null; // No image uploaded
                 }
-    
+
                 // Insert data into the 'employees' table
                 DB::table('employees')->insert([
                     'name' => $request->name,
@@ -60,9 +61,9 @@ class EmployeeController extends Controller
                     'role' => $request->role,
                     'age' => $request->age,
                     'city' => $request->city,
-                    'image_name' => $imageName, 
+                    'image_name' => $imageName,
                 ]);
-    
+
                 return response()->json(['insert' => 'success']);
             } catch (Exception $e) {
                 return response()->json(['insert' => 'error']);
@@ -70,11 +71,10 @@ class EmployeeController extends Controller
         } else {
             // Validation failed, return JSON response with validation errors
             return response()->json(['validation_errors' => $validation], 400);
-
         }
     }
-    
-    
+
+
     public function update()
     {
     }

@@ -20,5 +20,4 @@ Route::get('/', function () {
 
 
 Route::get('/get', [EmployeeController::class, 'fetch'])->name('fetchData');
-Route::post('/insertEmployees', [EmployeeController::class, 'insert'])->name('insertData');
-
+Route::post('/insertEmployees', [EmployeeController::class, 'insertDataMethod'])->name('insertData');

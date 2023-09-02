@@ -139,8 +139,6 @@ function serachFunction(current, serach) {
 ------------------------ ************************************
 */
 
-
-
 const getModal = document.querySelector(".modal");
 const getBody = document.body;
 
@@ -162,49 +160,53 @@ const addEmploye = document.querySelector(".addEmploye");
 
 const addImageInput = document.querySelector(".addImage");
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-const insertData = (e) => {
+const insertData = async (e) => {
     e.preventDefault();
     const addName = document.querySelector(".addName").value;
     const addEmail = document.querySelector(".addEmail").value;
     const addRole = document.querySelector(".addRole").value;
     const addAge = document.querySelector(".addAge").value;
     const addCity = document.querySelector(".addCity").value;
+    const fileImage = addImageInput.files[0];
 
-    const formData = new FormData();
-    formData.append("addName", addName);
-    formData.append("addEmail", addEmail);
-    formData.append("addRole", addRole);
-    formData.append("addAge", addAge);
-    formData.append("addCity", addCity);
-    formData.append("addImage", addImageInput.files[0]);
-    console.log(csrfToken)
-    const insertingData = async () => {
-        try {
-            console.log(insertDataRoute)
-            const fetchData = await fetch(insertDataRoute, {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "Content-type": "application/json",
-                    "X-CSRF-TOKEN": csrfToken,
-                },
-            });
-            const result = await fetchData.json();
-            console.log(result)
-            if (result.insert === "success") {
-                removeModal();
-                loadMoreRecords();
-                clearFields();
-            } else {
-                console.log("Failed to fetch inserted data");
-            }
-        } catch (error) {
-            console.log(error);
+    let object = {
+        addName: addName,
+        addEmail: addEmail,
+        addRole: addRole,
+        addAge: addAge,
+        addCity: addCity,
+        fileImage: fileImage,
+    }
+    let json_format = JSON.stringify(object);
+
+    // const formData = new FormData();
+    // formData.append("addName", addName);
+    // formData.append("addEmail", addEmail);
+    // formData.append("addRole", addRole);
+    // formData.append("addAge", addAge);
+    // formData.append("addCity", addCity);
+    // formData.append("addImage", fileImage);
+
+    try {
+        const fetchData = await fetch(insertDataRoute, {
+            method: "POST",
+            body: json_format,
+            headers: {
+                "content-type": 'application/json'
+            },
+        });
+        const result = await fetchData.json();
+        console.log(result);
+        if (result.insert === "success") {
+            removeModal();
+            loadMoreRecords();
+            clearFields();
+        } else {
+            console.log("Failed to fetch inserted data");
         }
-    };
-
-    insertingData();
-}
-
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 addEmploye.addEventListener("click", insertData);
